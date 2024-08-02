@@ -1,0 +1,34 @@
+name: Clang build
+
+on:
+  schedule:
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [main, release/19.x]
+
+    env:
+      BRANCH: ${{ matrix.branch }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Clone the repository
+        run: |
+          git clone -b ${{ matrix.branch }} https://github.com/XSans0/clang-build
+          cd clang-build
+
+      - name: Install dependencies
+        run: bash ci.sh deps
+
+      - name: Build
+        run: bash build.sh
