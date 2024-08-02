@@ -24,11 +24,14 @@ jobs:
       
       - name: Clone the repository
         run: |
-          git clone -b ${{ matrix.branch }} https://github.com/XSans0/clang-build
-          cd clang-build
+          git clone https://github.com/XSans0/clang-build
 
       - name: Install dependencies
-        run: bash ci.sh deps
+        run: |
+          cd clang-build
+          bash ci.sh deps
 
       - name: Build
-        run: bash build.sh
+        run: |
+          cd clang-build
+          bash build.sh
